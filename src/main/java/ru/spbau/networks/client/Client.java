@@ -20,8 +20,8 @@ public class Client implements Callable<Long> {
         this.hostName = hostName;
         this.portNumber = portNumber;
 
-        message = generateClojureProgram(requestLength);
-//        message = generageFib(requestLength);
+        message = generateConcatProgram(requestLength);
+//        message = generateFibProgram(requestLength);
         expectedResponse = Clojure.eval(message).toString();
     }
 
@@ -48,7 +48,7 @@ public class Client implements Callable<Long> {
     }
 
 
-    long sendRequest() {
+    public long sendRequest() {
         try(
                 Socket socket = new Socket(hostName, portNumber);
                 DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
@@ -64,13 +64,10 @@ public class Client implements Callable<Long> {
                 byte[] responseMsg = new byte[responseLength];
 
 
-//                System.out.println(String.format("receiving bytes: %d", responseLength));
                 reader.readFully(responseMsg);
 
                 String responseStr = new String(responseMsg);
-//                System.out.format("received mgs: %s\n", responseStr);
 
-//                assert (responseLength == 2);
                 assert (responseStr.equals(expectedResponse));
             }
             long endTime = System.nanoTime();
@@ -91,7 +88,7 @@ public class Client implements Callable<Long> {
         return "(str " + generateClojureConcats(str, from, mid) + " " + generateClojureConcats(str, mid, to) + ")";
     }
 
-    private static String generateClojureProgram(int length) {
+    private static String generateConcatProgram(int length) {
         String str = randomString(length);
         String res = "(apply str (repeat 3 " + generateClojureConcats(str, 0, str.length()) + "))";
 
@@ -113,7 +110,7 @@ public class Client implements Callable<Long> {
         return sb.toString();
     }
 
-    private static String generageFib(int size) {
+    private static String generateFibProgram(int size) {
         String msg = "(do (defn fib [x] (if (<= x 1) 1 (+ (fib (- x 1)) (fib (- x 2))))) (fib " + String.valueOf(size) + "))";
         return msg;
     }

@@ -44,9 +44,7 @@ public class Main {
             long res = run(host, port, clientsNumber, requestLength);
 
             System.out.println(res/(1000*1000*1000.0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
             System.err.println("Wrong arguments");
